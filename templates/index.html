@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+
+    <title>Health Prediction Form</title>
+</head>
+<body >
+    <div class="bg-img">
+        <div class="overlay"></div>
+        <div>
+            <h1 class="header">HEART DISEASE PREDICTION</h1>
+        </div>
+        <div class="navbar">
+            <a href="#">HOME</a>
+            <a href="#" onclick="scrollToPredict(); return false;">PREDICT</a>
+            <a href="#"onclick="scrollToAcc(); return false;">ACCURACY</a>
+            <a href="#" onclick="scrollToAbout(); return false;">ABOUT</a>
+        </div>
+    </div>
+    <div class="content">
+        <h1 id="prediction-heading">Predict Your Chance of Having a Heart Disease</h1>
+        <br>
+        <hr class="heading-line"><br>
+        <div style="display: flex; flex-direction: row;">
+        <div class="form-out"> 
+        </div>
+        <div class="form-container">
+            <div>
+        <form id="healthPredictionForm">
+            <div style="width:350px">
+                <label for="smoking" class="lb">Smoking:</label>
+            <input type="checkbox" id="smoking" name="smoking" class="input-field"><br><br>
+    
+            <label for="stroke">Stroke:</label>
+            <select id="stroke" name="stroke" class="input-field">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+    
+            <label for="difficultyWalking">Difficulty Walking:</label>
+            <select id="difficultyWalking" name="difficultyWalking" class="input-field">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+    
+            <label for="diabetic">Diabetic:</label>
+            <select id="diabetic" name="diabetic" class="input-field">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+    
+            <label for="sex">Sex:</label>
+            <select id="sex" name="sex" class="input-field">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select><br><br>
+            
+            
+            <label for="kidneyDisease">Kidney Disease:</label>
+            <select id="kidneyDisease" name="kidneyDisease"  class="input-field">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+
+
+            </div>
+            <div style="width:350px">
+                <br><br><br>
+    
+            <label for="skinCancer">Skin Cancer:</label>
+            <select id="skinCancer" name="skinCancer"  class="input-field">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+    
+            <label for="physicalActivity">Able to Do Physical Activity:</label>
+            <select id="physicalActivity" name="physicalActivity"  class="input-field">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select><br><br>
+    
+            <label for="ageCategory">Age Category:</label>
+            <select id="ageCategory" name="ageCategory"  class="input-field">
+                <option value="55-59">55-59</option>
+                <option value="80 or older">80 or older</option>
+                <option value="65-69">65-69</option>
+                <option value="75-79">75-79</option>
+                <option value="40-44">40-44</option>
+                <option value="70-74">70-74</option>
+                <option value="60-64">60-64</option>
+                <option value="50-54">50-54</option>
+                <option value="45-49">45-49</option>
+                <option value="18-24">18-24</option>
+                <option value="35-39">35-39</option>
+                <option value="30-34">30-34</option>
+                <option value="25-29">25-29</option>
+            </select><br><br>
+    
+            <label for="physicalHealth">Physical Health:</label>
+            <input type="number" id="physicalHealth" name="physicalHealth"  class="input-field" min="0" max="10" required><br><br>
+
+            
+                <button type="submit" class="custom-button">Predict</button>
+    
+
+            </div>
+        </form>
+        
+    </div>
+    <div>
+        
+
+        </div>
+        <div id="result" style="margin-top:10px;"></div>
+    </div>
+    </div>
+    <br><br><br><br><br>
+    <div class="about-section">
+        <h1 class="acc-heading" id="Accuracy-heading">ACCURACY OF PREDICTION OF MODEL</h1>
+        <p class="for-text">
+            With an accuracy rate of 90%, our model demonstrates a strong performance in predicting outcomes.<br>
+            Utilizing the decision tree algorithm during training, it effectively captures patterns and relationships<br>
+            within the dataset.This high accuracy signifies the model's ability to make correct predictions for the majority<br>
+            of cases it encounters.However, further analysis is warranted to understand potential areas of improvement and ensure<br>
+             robustness across various scenarios.
+        </p>
+    </div>
+    </div>
+    </div>
+    <script>
+       document.getElementById('healthPredictionForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    // Log the form data to the console
+    console.log('Form Data:', data);
+
+    // Make POST request to server with form data
+    fetch('/predict', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',  // Corrected content type
+    },
+    body: new URLSearchParams(data),  // Form data needs to be URL encoded
+    })
+    .then(response => response.json())
+    .then(result => {
+        document.getElementById('result').innerHTML = `Prediction of Heart Disease: ${result.prediction}`;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+function scrollToPredict() {
+            document.getElementById('prediction-heading').scrollIntoView();
+        }
+        function scrollToAbout() {
+            document.getElementById('About-heading').scrollIntoView();
+        }
+        function scrollToAcc() {
+            document.getElementById('Accuracy-heading').scrollIntoView();
+        }
+    </script>
+</body>
+</html>
